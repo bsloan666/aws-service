@@ -3,7 +3,6 @@ AWS-service
 
 An example web server that adds two numbers
 -------------------------------------------
-
 Simple UWSGI web server in a docker container. To test locally in Docker Desktop:
 
 ```
@@ -28,3 +27,7 @@ docker-compose up -d
 # point browser at: 
 http://127.0.0.1:5000/sum/add2
 ```
+
+Upcoming
+--------
+Instructions to upload to AWS
