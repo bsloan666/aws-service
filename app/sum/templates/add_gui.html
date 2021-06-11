@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Add 2 Numbers</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/my_style.css') }}">
+</head>
+<body>
+    <form method="POST">
+    <div style="padding-left: 100px; padding-top 50px">
+    <h1> Add 2 Numbers </h1>
+        <table>
+            <tr>
+                <td><b>Left Hand Side</b></td> 
+                <td><b>Right Hand Side</b></td>
+                <td><b>Result</b></td>
+            </tr>
+            <tr>
+                <td><input type="text" name="lhs" value="{{ lhs }}"></td>
+                <td><input type="text" name="rhs" value="{{ rhs }}"></td>
+                <td><input type="text" name="result" value="{{ result }}"></td>
+            </tr>
+        </table>
+        <input type="submit" name="submit" value="Submit">
+    </div>
+    </form>
+</body>
+</html>

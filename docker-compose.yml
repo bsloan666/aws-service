@@ -1,0 +1,17 @@
+version: '3.7'
+
+services:
+  sum_server:
+    container_name: sum_server
+    restart: always
+    build: ./app
+    volumes:
+      - ./app:/opt
+      - /pids:/pids
+
+    ports:
+      - "5000:5000"
+    working_dir: /opt
+    command:  uwsgi --http 0.0.0.0:5000 --master  --wsgi-file /opt/wsgi.py --ini /opt/sum_server.ini --http-to /pids/sum_server.sock
+    environment:
+        - PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
