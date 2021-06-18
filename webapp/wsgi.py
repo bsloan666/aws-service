@@ -1,12 +1,12 @@
 from flask import Flask
-from sum.views import SUM
+from app.views import APP
 
 application = Flask(__name__)
 
 
 @application.route('/', methods=['GET', 'POST'])
 def index():
-    return 'Sum Server'
+    return 'App Server'
 
 
-application.register_blueprint(SUM, url_prefix='/sum')
+application.register_blueprint(SUM, url_prefix='/app')

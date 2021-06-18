@@ -1,7 +1,5 @@
 # Author: bsloan 
 """
-    Shotgun Action Menu Item for Product Generation
-    (using Product Generator)
     Standard Flask Application endpoints
 """
 import os
