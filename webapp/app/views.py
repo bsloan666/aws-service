@@ -5,7 +5,7 @@
 import os
 import json
 import sys
-
+from .compose import generate_notes 
 from flask import Blueprint, render_template, request
 
 
@@ -20,8 +20,6 @@ def add2():
     The request will have Left Hand Side and Right Hand Side arguments.
     Sum them and return 
     """
-
-    versions = []
 
     if request.method == 'POST':
 
@@ -43,3 +41,22 @@ def add2():
 
 
         
+@APP.route('/thanks', methods=['GET', 'POST'])
+def thanks():
+    """
+    The request will have Left Hand Side and Right Hand Side arguments.
+    Sum them and return 
+    """
+
+    if request.method == 'POST':
+
+        if 'submit' in request.form:
+            cfile = request.files['csvfile']
+
+            content =  generate_notes(cfile) 
+            return render_template('blank.html',
+                           content=content) 
+
+    print("Entry Point!")
+    return render_template('upload.html')
+                           

@@ -9,4 +9,4 @@ def index():
     return 'App Server'
 
 
-application.register_blueprint(SUM, url_prefix='/app')
+application.register_blueprint(APP, url_prefix='/app')
