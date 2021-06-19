@@ -9,12 +9,12 @@ import sys
 from flask import Blueprint, render_template, request
 
 
-SUM = Blueprint('sum', __name__,
+APP = Blueprint('app', __name__,
                 template_folder='templates',
                 static_folder='static')
 
 
-@SUM.route('/add2', methods=['GET', 'POST'])
+@APP.route('/add2', methods=['GET', 'POST'])
 def add2():
     """
     The request will have Left Hand Side and Right Hand Side arguments.
