@@ -46,7 +46,6 @@ have been sent to
 
 
 def donor_thanks(donor, fields, address, disclaimer):
-    print(fields)
     result = donor_template
     result = re.sub('\$DONOR\$',donor, result)
     multiple = False
