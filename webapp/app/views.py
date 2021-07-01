@@ -53,7 +53,16 @@ def thanks():
         if 'submit' in request.form:
             cfile = request.files['csvfile']
 
-            content =  generate_notes(cfile) 
+            address_line_1 = request.form.get('address_line_1')
+            address_line_2 = request.form.get('address_line_2')
+            disclaimer_line_1 = request.form.get('disclaimer_line_1')
+            disclaimer_line_2 = request.form.get('disclaimer_line_2')
+            content =  generate_notes(cfile,
+                           address_line_1=address_line_1,
+                           address_line_2=address_line_2,
+                           disclaimer_line_1=disclaimer_line_1,
+                           disclaimer_line_2=disclaimer_line_2) 
+
             return render_template('blank.html',
                            content=content) 
 

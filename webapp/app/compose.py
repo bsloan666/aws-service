@@ -9,6 +9,7 @@ import sys
 import re
 import app.htmlier as htmlier
 import datetime
+import pandas as pd
 from collections import Counter
 
 donee_template = """Dear $DONEE$,
@@ -19,8 +20,8 @@ From
 $DONOR$
 We give thanks to God for these gifts.
 
-West Los Angeles United Methodist Church
-1913 Purdue Avenue, Los Angeles, CA 90025
+$ADDRESS1$
+$ADDRESS2$
 $DATE$"""
 
 donor_template = """Dear $DONOR$,
@@ -30,10 +31,10 @@ given to the church $HONOREE$
 $ACK$$DONEE$
 We give thanks to God for your gift.
 
-West Los Angeles United Methodist Church
-1913 Purdue Avenue, Los Angeles, CA 90025
-No goods or services were provided by the
-church in return for this contribution.
+$ADDRESS1$
+$ADDRESS2$
+$DISCLAIMER1$
+$DISCLAIMER2$
 $DATE$"""
 
 ack = """An acknowledgement of your gift
@@ -44,7 +45,7 @@ have been sent to
 """
 
 
-def donor_thanks(donor, fields):
+def donor_thanks(donor, fields, address, disclaimer):
     print(fields)
     result = donor_template
     result = re.sub('\$DONOR\$',donor, result)
@@ -61,6 +62,10 @@ def donor_thanks(donor, fields):
     tmp = re.sub('of ', 'of\n', tmp)
     tmp = re.sub('In ', 'in ', tmp)
     result = re.sub('\$HONOREE\$', tmp, result)
+    result = re.sub('\$ADDRESS1\$', address[0], result)
+    result = re.sub('\$ADDRESS2\$', address[1], result)
+    result = re.sub('\$DISCLAIMER1\$', disclaimer[0], result)
+    result = re.sub('\$DISCLAIMER2\$', disclaimer[1], result)
 
     tmp = ""
     if fields['donees'] and fields['donees'][0]:
@@ -84,7 +89,7 @@ def donor_thanks(donor, fields):
     result = re.sub('\$DATE\$', datetime.date.today().strftime("%B %d, %Y"), result)
     return result
 
-def donee_announce(donee, fields):
+def donee_announce(donee, fields, address):
     result = donee_template
     result = re.sub('\$DONEE\$', donee, result)
     multiple_donors = len(fields['donors']) > 1
@@ -94,6 +99,8 @@ def donee_announce(donee, fields):
     tmp = re.sub('of ', 'of\n', tmp)
     tmp = re.sub('In ', 'in ', tmp)
     result = re.sub('\$HONOREE\$', tmp, result)
+    result = re.sub('\$ADDRESS1\$', address[0], result)
+    result = re.sub('\$ADDRESS2\$', address[1], result)
     tmp = ""
     for don in fields['donors']:
         if don:
@@ -140,12 +147,17 @@ def donee_totals(records):
     return donee_dict
         
 def all_records(handle):
-    #handle = open(filename, 'r')
+    temp_df = pd.read_excel(handle)
+    handle.close()
+    temp_csv_path = os.path.join("/var/tmp/", os.path.basename(handle.name))+".csv" 
+    temp_df.to_csv(temp_csv_path, index=False)
+    
+    handle = open(temp_csv_path, 'r')
     lines = handle.readlines()
-    #handle.close()
+    handle.close()
     result = []
     for line in lines[1:]:
-        line = line.decode("utf-8")
+        #line = line.decode("utf-8")
         values = re.split(',', line.strip())
         if values[0]:
             result.append( 
@@ -155,7 +167,7 @@ def all_records(handle):
     return result
 
 
-def generate_notes(handle):
+def generate_notes(handle, address_line_1, address_line_2, disclaimer_line_1, disclaimer_line_2):
     records = all_records(handle)
     don_tots = donor_totals(records)
     dee_tots = donee_totals(records)
@@ -166,7 +178,9 @@ def generate_notes(handle):
     for donor,data in don_tots.items():
         note = '<p style="page-break-before: always">'
         note += '<hr class="pb">'
-        temp = donor_thanks(donor, data)
+        temp = donor_thanks(donor, data,
+                            [address_line_1, address_line_2],
+                            [disclaimer_line_1, disclaimer_line_2])
         lines = re.split('\n', temp)
         mid = ""
         reg = True
@@ -186,7 +200,7 @@ def generate_notes(handle):
     for donee,data in dee_tots.items():
         note = '<p style="page-break-before: always">'
         note += '<hr class="pb">'
-        temp = donee_announce(donee, data)
+        temp = donee_announce(donee, data, [address_line_1, address_line_2])
         lines = re.split('\n', temp)
         mid = ""
         for line in lines[0:-1]:

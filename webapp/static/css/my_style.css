@@ -131,6 +131,8 @@ input {
     border-style: groove;
     border-radius: 4px;
     border-color: #888888;
+	width: 25%;
+	margin: 0;
 	font-size: 12px;
 }
 

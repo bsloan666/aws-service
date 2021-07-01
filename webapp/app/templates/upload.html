@@ -2,14 +2,22 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Upload CSV</title>
+    <title>Upload Excel</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/my_style.css') }}">
 </head>
 <body>
     <form method="POST" enctype="multipart/form-data">
     <div style="padding-left: 100px; padding-top 50px">
-    <h1> Create Acknowledgement Letters From CSV </h1>
-        <input type="file" id="myfile" name="csvfile"><br>
+    <h1> Create Acknowledgement Letters From Excel Spreadsheet </h1>
+        <p> This is a web application for creating thank-you letters to donors
+        and notifications to honorees based on an uploaded Excel spreadsheet
+        with the following form:</p>
+        <img src="{{ url_for('static', filename='images/excel_example.png') }}" alt="Spreadsheet Format"/><br>
+        <b>Address Line 1:</b><input type="text" name="address_line_1" value="West Los Angeles United Methodist Church"><br>
+        <b>Address Line 2:</b><input type="text" name="address_line_2" value="1913 Purdue Avenue, Los Angeles, CA 90025"><br><br>
+        <b>Disclaimer Line 1:</b><input type="text" name="disclaimer_line_1" value="No goods or services were provided by the"><br>
+        <b>Disclaimer Line 2:</b><input type="text" name="disclaimer_line_2" value="church in return for this contribution."><br><br>
+        <input type="file" id="myfile" name="csvfile"><br><br>
         <input type="submit" name="submit" value="Submit">
     </div>
     </form>
