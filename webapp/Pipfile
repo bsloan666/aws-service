@@ -5,6 +5,7 @@ verify_ssl = true
 
 [packages]
 flask = "*"
+openpyxl = "*"
 pandas = "*"
 requests = "*"
 docopt = "*"

@@ -152,7 +152,7 @@ def all_records(handle):
     temp_csv_path = os.path.join("/var/tmp/", os.path.basename(handle.name))+".csv" 
     temp_df.to_csv(temp_csv_path, index=False)
     
-    handle = open(temp_csv_path, 'r')
+    handle = open(temp_csv_path, 'r', encoding='utf-8')
     lines = handle.readlines()
     handle.close()
     result = []
