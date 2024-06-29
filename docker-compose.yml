@@ -7,11 +7,11 @@ services:
     build: ./webapp
     volumes:
       - ./webapp:/opt
-      - /pids:/pids
+      - /tmp/pids:/tmp/pids
 
     ports:
       - "5000:5000"
     working_dir: /opt
-    command:  uwsgi --http 0.0.0.0:5000 --master  --wsgi-file /opt/wsgi.py --ini /opt/app_server.ini --http-to /pids/app_server.sock
+    command:  uwsgi --http 0.0.0.0:5000 --master  --wsgi-file /opt/wsgi.py --ini /opt/app_server.ini
     environment:
         - PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin

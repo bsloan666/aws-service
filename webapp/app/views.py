@@ -4,14 +4,58 @@
 """
 import os
 import json
+import re
+import shutil
 import sys
-from .compose import generate_notes 
-from flask import Blueprint, render_template, request
+import uuid
 
+from .compose import generate_notes 
+from flask import Flask, Blueprint, render_template, request
+
+from . import upaint
 
 APP = Blueprint('app', __name__,
                 template_folder='templates',
                 static_folder='static')
+
+RENDER_DIRECTORY = os.path.join('static', 'images')
+
+app = app = Flask(__name__)
+
+app.config['IMAGE_FOLDER'] = RENDER_DIRECTORY 
+
+def file_prefix_from_render_string(input_str):
+    """
+    make a unique-ish file name from the prompt
+    """
+    unfriendly = re.compile(r'[^a-zA-Z0-9]')
+    outname = re.sub(unfriendly, '_', input_str)
+    
+    return "_".join(["render", outname[0:24], str(uuid.uuid4())[0:8]]) 
+
+
+@APP.route('/nsl', methods=['GET', 'POST'])
+def parse_scene():
+    """
+    The request will have a string and possibly some render parameters.
+    convert the string to a rendered scene 
+    """
+
+    render_string = ""
+    prefix = "dummy"
+    file_path = "static/images/logo.png"
+    if request.method == 'POST':
+        render_string = request.form.get('prompt')
+        if 'submit' in request.form:
+            prefix = file_prefix_from_render_string(render_string)
+            image_path = upaint.render(render_string, prefix)
+            file_path = os.path.join(app.config['IMAGE_FOLDER'], "{0}.png".format(prefix))
+            shutil.move(image_path, file_path)
+
+    return render_template(
+        'nsl_gui.html',
+        prompt=render_string, 
+        render=file_path)
 
 
 @APP.route('/add2', methods=['GET', 'POST'])
