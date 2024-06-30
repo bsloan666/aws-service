@@ -10,7 +10,7 @@ services:
       - /tmp/pids:/tmp/pids
 
     ports:
-      - "5000:5000"
+      - "443:5000"
     working_dir: /opt
     command:  uwsgi --http 0.0.0.0:5000 --master  --wsgi-file /opt/wsgi.py --ini /opt/app_server.ini
     environment:
