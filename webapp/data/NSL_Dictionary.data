@@ -29,6 +29,7 @@ N light union { sphere {< 0, 0, 0>, 1.5 pigment {color White filter 1} hollow in
 N camera camera {  perspective location <0.0, 1.5, -12.0> direction <0, 0, 1> up y right x*1.77 look_at <0.0, 0.5, 0.00>
 N mountain height_field { function 100 100 { f_noise_generator(x*30, y*30, z*30, 3) } smooth scale < 100, 1, 100> translate < -50, -1.4, -50 >  
 N terrain height_field { function 100 100 { f_noise_generator(x*30, y*30, z*30, 3) } smooth scale < 100, 1, 100> translate < -50, -1.4, -50 >  
+N snow height_field { function 100 100 { f_noise_generator(x*30, y*30, z*30, 3) } smooth scale < 100, 1, 100> translate < -50, -1.4, -50 >  
 
 A near translate < 0, 0, -4>
 A close translate < 0, 0, -2>
@@ -118,3 +119,8 @@ A checkered pigment { checker Black White }
 A crackled pigment { crackle form <0.31, 0.62, 0.53> color_map { [0.1  color Wheat] [0.9  color Bronze] } } 
 A turning rotate <0, clock*180, 0>
 A zooming translate < 0, 0 ,clock*2.1>
+
+F array flat_array
+F stack stack
+F row row
+F wall wall

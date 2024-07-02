@@ -38,7 +38,7 @@ def default_light():
 def header():
     return """
     #version 3.7;
-    
+
     global_settings { assumed_gamma 2.2 }
 
     #include "colors.inc"
@@ -58,60 +58,51 @@ def header():
     }
     """
 
-'''
-def parse_prompt(in_str):
-    result = []
-    grammar = r"""
-                NP: {<DT|PP\$>?<JJ>*<NN.*>+} # noun phrase
-                PP: {<IN><NP>}               # prepositional phrase
-                VP: {<MD>?<VB.*><NP|PP>}     # verb phrase
-                CLAUSE: {<NP><VP>}           # full clause
-            """
-    for sentence in re.split(r"\.", in_str):
-        sentence = sentence.rstrip()
-        if len(sentence) > 3:
-            print( "[" + sentence + "]") 
-            tokens = nltk.word_tokenize(sentence)
-            tagged = nltk.pos_tag(tokens)
-            entities = nltk.chunk.ne_chunk(tagged)
-            cp = nltk.RegexpParser(grammar)
-            temp = cp.parse(entities)
-            result.append(temp)
+def row(arg):
+    result = ""
+    for x in range(-8, 9, 4):
+        result += arg[:-2] + " translate <{0}, 0, 0> ".format(x) + arg[-2:] 
+
     return result
 
 
-def extract(part, tree):
-    """
-    given a phrase type or part-of-speech type and the parsed tree 
-    of a sentence, return the associated fragment of text
-    """
+def stack(arg):
+    result = ""
+    for y in range(0, 10, 2):
+        result += arg[:-2] + " translate <0, {0}, 0> ".format(y) + arg[-2:] 
 
-    result = []
-    if part == "S":
-        return tree.leaves()
-    for child in tree:
-        if isinstance(child, nltk.tree.tree.Tree):
-            # print(child.label())
-            if child.label() == part:
-                result = child.leaves()
-                result.append("|")
-            else:    
-                result.extend(extract(part, child))    
-        else:
-            # print(child[0])
-            if child[1] == part:
-                result.append(child)
-                result.append("|")
+    return result
 
-    return result 
 
-def on_closing():
-    with open("tmp/tmp.txt", "w") as handle:
-        handle.write(editor.get("1.0", tk.END))
-        handle.write("\n")
-    sys.exit(0)    
+def flat_array(arg):
+    result = ""
+    for x in range(-8, 9, 4):
+        for z in range(-2, 15, 4):
+            result += arg[:-2] + " translate <{0}, 0, {1}> ".format(x, z) + arg[-2:] 
 
-'''
+    return result
+
+
+def wall(arg):
+    result = ""
+    for x in range(-7, 8, 3):
+        for y in range(0, 10, 2):
+            result += arg[:-2] + " translate <{0}, {1}, 0> ".format(x, y) + arg[-2:] 
+
+    return result
+
+
+def do_function(function, arg):
+    if function == "flat_array":
+        return flat_array(arg)
+    if function == "stack":
+        return stack(arg)
+    if function == "row":
+        return row(arg)
+    if function == "wall":
+        return wall(arg)
+    return ""
+
 
 def initialize_dictionary():
     """
@@ -135,14 +126,43 @@ def part_of_speech(record):
     return record['part']
 
 
-def translate_record(record):
-    return record['code']
+def translate_adjective(functions, modifiers, record):
+    text = modifiers
+    text += record['code']
+    return functions, text, ""
+
+
+def translate_noun(functions, modifiers, record):
+    text = ''
+    text += record['code']
+    text += " "
+    text += modifiers
+    text += " }\n"
+    return functions, "", text
+
+
+def translate_function(functions, modifiers, record):
+    functions.append(record['code'])
+    return functions, modifiers, ""
+
+
+def translate(functions, modifiers, record):
+    if part_of_speech(record) == "N":
+        return translate_noun(functions, modifiers, record)
+
+    elif part_of_speech(record) == "A":
+        return translate_adjective(functions, modifiers, record)
+
+    elif part_of_speech(record) == "F":
+        return translate_function(functions, modifiers, record)
+    else:
+        return functions, modifiers, "" 
 
 
 def text_to_pov(text):
     modifiers = ""
     subject = ""
-
+    functions = []
     no_camera = True
     no_light = True
     line = re.split(" ", text.rstrip())
@@ -150,22 +170,19 @@ def text_to_pov(text):
     lookup = initialize_dictionary()
 
     for token in line:
-        record = lookup.get(token, {"part": "X", "code": ""})
+        record = lookup.get(token.lower(), {"part": "X", "code": ""})
+        if part_of_speech(record) == "X":
+            record = lookup.get(token.lower().rstrip("s"), {"part": "X", "code": ""})
 
-        if part_of_speech(record) == "A":
-            modifiers += translate_record(record)
-            modifiers += " "
+        functions, modifiers, text = translate(functions, modifiers, record)
 
-        if part_of_speech(record) == "N":
-            if token == "camera":
-                no_camera = False
-            if token == "light":
-                no_light = False
-            subject += translate_record(record)
-            subject += " "
-            subject += modifiers
-            subject += " }\n"
-            modifiers = ""
+        if text:
+            if not functions:
+                subject += text
+            else:
+                for function in functions:
+                    subject += do_function(function, text)
+                functions = []    
 
     if no_camera:
         subject += default_camera()
@@ -185,7 +202,7 @@ def render(sentence, file_prefix):
     """
     parsed = parse_prompt(editor.get("1.0", tk.END))
 
-    sentence = "" 
+    sentence = ""
     for tree in parsed:
         tree.pretty_print()
         sentence += " ".join([x[0] for x in extract("S", tree)])
@@ -233,70 +250,6 @@ def render(sentence, file_prefix):
 
     return img_fname
 
-'''
-app = tk.Tk()
-app.protocol("WM_DELETE_WINDOW", on_closing)
-
-sizex = 1280
-sizey = 720
-posx = 100
-posy = 100
-'''
 
 if not os.path.exists("tmp"):
     os.makedirs("tmp")
-'''
-editor = tk.Text(height=10)
-if os.path.exists("tmp/tmp1001.ppm"):
-    pil_image = Image.open("tmp/tmp1001.ppm")
-    image = ImageTk.PhotoImage(pil_image)
-
-    canvas = tk.Label(image=image)
-    canvas.configure(image=image)
-elif os.path.exists("tmp/tmp.ppm"):
-    pil_image = Image.open("tmp/tmp.ppm")
-    image = ImageTk.PhotoImage(pil_image)
-
-    canvas = tk.Label(image=image)
-    canvas.configure(image=image)
-else:
-    canvas = tk.Label()
-
-frame = tk.Frame()
-duration = tk.Entry(frame, width=5)
-label = tk.Label(frame, text="Duration")
-
-slider = tk.Scale(
-    frame,
-    orient=tk.HORIZONTAL,
-    length=500,
-    from_=1001,
-    to=1002,
-    command=change_frame)
-
-button = tk.Button(text="Go!")
-button.config(command=render)
-duration.insert(0, "1")
-
-label.pack(side=tk.LEFT)
-duration.pack(side=tk.LEFT)
-slider.pack(side=tk.LEFT)
-
-canvas.pack()
-editor.pack()
-frame.pack()
-button.pack()
-
-app.title("Text to Image")
-
-app.update_idletasks()
-if os.path.exists("tmp/tmp.txt"):
-    with open("tmp/tmp.txt", "r") as handle:
-        editor.insert(tk.END, handle.read())
-
-
-editor.bind("<Return>", render)
-app.mainloop()
-
-'''
-
