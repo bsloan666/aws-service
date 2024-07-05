@@ -40,22 +40,27 @@ def parse_scene():
     The request will have a string and possibly some render parameters.
     convert the string to a rendered scene 
     """
-
     render_string = ""
     prefix = "dummy"
     file_path = "static/images/logo.png"
+    width, height = 720, 404 
+    resolution = "{0}x{1}".format(width, height) 
     if request.method == 'POST':
         render_string = request.form.get('prompt')
+        resolution = request.form.get('resolution') 
+        width, height = [int(x)for x in re.split("x", resolution)]
         if 'submit' in request.form:
             prefix = file_prefix_from_render_string(render_string)
-            image_path = upaint.render(render_string, prefix)
+            image_path = upaint.render(render_string, prefix, width, height)
             file_path = os.path.join(app.config['IMAGE_FOLDER'], "{0}.png".format(prefix))
             shutil.move(image_path, file_path)
 
     return render_template(
         'nsl_gui.html',
         prompt=render_string, 
-        render=file_path)
+        render=file_path,
+        width=width,
+        resolution=resolution)
 
 
 @APP.route('/add2', methods=['GET', 'POST'])

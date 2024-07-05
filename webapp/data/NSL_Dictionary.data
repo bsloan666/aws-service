@@ -23,6 +23,7 @@ N cabinet  difference { box { <-1.0, -1.0, -1.0>, <1.0, 1.0, 1.0> } box { <-1.0,
 N case difference { box { <-1.0, -1.0, -1.0>, <1.0, 1.0, 1.0> } box { <-1.0, -1.0, -1.0>, <1.0, 1.0, 1.0> scale < 0.9, 0.9, 0.9> translate < 0, 0, -0.2> }
 N ground  plane { <0, 1, 0>, -0.999    
 N floor  plane { <0, 1, 0>, -0.999    
+N stratum  plane { <0, 1, 0>, 7    
 N sky sky_sphere {  pigment { gradient y color_map { [ 0.5  color CornflowerBlue ]  [ 1.0  color MidnightBlue ] }  scale 2  translate -1 }
 N fog fog { distance 25 color rgb<0.5, 0.5, 0.5>    
 N light union { sphere {< 0, 0, 0>, 1.5 pigment {color White filter 1} hollow interior { media { emission color rgb < 1, 1, 1> absorption color rgb < 0, 0, 0> density {spherical  color_map {  [0 color Black] [0.5 color White] [1 color White]    }  }  }}} sphere {< 0, 0, 0>, 0.5 pigment {color White filter 1} finish {specular 1} } light_source { < 0, 0, 0 > color White fade_distance 25 fade_power 2  area_light <5, 0, 0>, <0, 0, 5>, 5, 5 adaptive 1 jitter } translate < 0, 5, 10>
@@ -56,6 +57,7 @@ A skinny scale <0.25, 1, 0.25>
 A tall scale <1, 2, 1> translate < 0, 1 , 0>
 A squat scale <1, 0.5, 1> translate < 0, -0.5  , 0>
 A flat scale <1, 0.25, 1>  translate < 0, -0.75  , 0>
+A short scale <1, 0.5, 1>  translate < 0, -0.5  , 0>
 A red pigment { color Red }
 A blue pigment { color Blue }
 A green pigment { color Green }
@@ -124,3 +126,5 @@ F array flat_array
 F stack stack
 F row row
 F wall wall
+F pile pile
+F tree tree

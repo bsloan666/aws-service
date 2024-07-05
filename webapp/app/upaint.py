@@ -1,4 +1,5 @@
 import os
+import random
 import sys
 # import json
 # import subprocess
@@ -58,49 +59,110 @@ def header():
     }
     """
 
-def row(arg):
-    result = ""
+def row(arg, modifiers):
+    result = "union {\n"
     for x in range(-8, 9, 4):
         result += arg[:-2] + " translate <{0}, 0, 0> ".format(x) + arg[-2:] 
 
+    result += modifiers
+    result += "}\n" 
     return result
 
 
-def stack(arg):
-    result = ""
+def stack(arg, modifiers):
+    result = "union {\n"
     for y in range(0, 10, 2):
         result += arg[:-2] + " translate <0, {0}, 0> ".format(y) + arg[-2:] 
 
+    result += modifiers
+    result += "}\n" 
     return result
 
 
-def flat_array(arg):
-    result = ""
+def flat_array(arg, modifiers):
+    result = "union {\n"
     for x in range(-8, 9, 4):
         for z in range(-2, 15, 4):
             result += arg[:-2] + " translate <{0}, 0, {1}> ".format(x, z) + arg[-2:] 
 
+    result += modifiers
+    result += "}\n" 
     return result
 
 
-def wall(arg):
-    result = ""
-    for x in range(-7, 8, 3):
+def pile(arg, modifiers):
+    result = "union {\n"
+    for dim in range(5, 0, -1):
+        for x in range(int(-4 * dim/2), int(4 * dim/2), 4):
+            for z in range(int(-4 * dim/2) + 8, int(4 * dim/2) + 8, 4):
+                result += arg[:-2] + " translate <{0}, {1}, {2}> ".format(x, (5 - dim) * 2, z) + arg[-2:] 
+
+    result += modifiers
+    result += "}\n" 
+    return result
+
+
+def wall(arg, modifiers):
+    result = "union {\n"
+    for x in range(-6, 7, 3):
         for y in range(0, 10, 2):
             result += arg[:-2] + " translate <{0}, {1}, 0> ".format(x, y) + arg[-2:] 
 
+    result += modifiers
+    result += "}\n" 
+    return result
+
+
+def tree(arg, modifiers):
+    random.seed(10)
+    result = "union {\n"
+    result += "cylinder { " + "<0, -1, 0> <0, 1, 0> 0.3 }\n"
+    result += "sphere { " + "<0, 1, 0> 0.3 }\n"
+    length = 2.0
+    attenuation = 0.666
+    limbs = 0
+    depth = 0
+
+    def make_branches(position, result, arg, depth):
+        factor = attenuation ** depth
+        for branch in [0, 1]:
+            xpos = position[0] + random.uniform(-factor * 2, factor * 2)
+            ypos = position[1] + length * random.uniform(0.1, factor * 2) 
+            zpos = position[2] + random.uniform(-factor * 2, factor * 2)
+            result += "cylinder { " + "<{0}, {1}, {2}> <{3}, {4}, {5}> {6} " .format(
+                position[0], position[1],  position[2], xpos, ypos, zpos, factor/4) + "}\n" 
+            result += "sphere { " + "<{0}, {1}, {2}> {3} " .format(
+                xpos, ypos, zpos, factor/4) + "}\n" 
+            print("Tree. depth: {0}".format(depth))
+            if depth < 5:
+                result = make_branches([xpos, ypos, zpos], result, arg, depth + 1)
+            else:
+                result += arg[:-2] + " translate <{0}, {1}, {2}> ".format(
+                    xpos, ypos, zpos) + arg[-2:]
+                return result
+
+        return result
+
+    result = make_branches([0, 1, 0], result, arg, 0)         
+
+    result += modifiers
+    result += "}\n" 
     return result
 
 
 def do_function(function, arg):
-    if function == "flat_array":
-        return flat_array(arg)
-    if function == "stack":
-        return stack(arg)
-    if function == "row":
-        return row(arg)
-    if function == "wall":
-        return wall(arg)
+    if function[0] == "flat_array":
+        return flat_array(arg, function[1])
+    if function[0] == "stack":
+        return stack(arg, function[1])
+    if function[0] == "row":
+        return row(arg, function[1])
+    if function[0] == "wall":
+        return wall(arg, function[1])
+    if function[0] == "pile":
+        return pile(arg, function[1])
+    if function[0] == "tree":
+        return tree(arg, function[1])
     return ""
 
 
@@ -142,8 +204,8 @@ def translate_noun(functions, modifiers, record):
 
 
 def translate_function(functions, modifiers, record):
-    functions.append(record['code'])
-    return functions, modifiers, ""
+    functions.append((record['code'], modifiers))
+    return functions, "", ""
 
 
 def translate(functions, modifiers, record):
@@ -180,9 +242,11 @@ def text_to_pov(text):
             if not functions:
                 subject += text
             else:
+                temp_subject = text 
                 for function in functions:
-                    subject += do_function(function, text)
-                functions = []    
+                    temp_subject += do_function(function, temp_subject)
+                functions = []
+                subject += temp_subject
 
     if no_camera:
         subject += default_camera()
@@ -198,7 +262,7 @@ def change_frame(frame):
     canvas.image = image
 '''
 
-def render(sentence, file_prefix):
+def render(sentence, file_prefix, width, height):
     """
     parsed = parse_prompt(editor.get("1.0", tk.END))
 
@@ -224,7 +288,7 @@ def render(sentence, file_prefix):
     cmd += "+Q10 "
     cmd += "+A0.5 +AM1 +R16 +J2.2 +UV +UL "
     cmd += "Output_File_Type=N "
-    cmd += "-W1280 -H720 "
+    cmd += "-W{0} -H{1} ".format(width, height)
 
     frames = 1
     img_fname = "tmp/{0}.png".format(file_prefix)
