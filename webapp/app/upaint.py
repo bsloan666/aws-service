@@ -11,6 +11,7 @@ import sys
 import re
 
 
+
 def default_camera():
     return """
     camera {
@@ -58,6 +59,9 @@ def header():
         }
     }
     """
+
+def modify_object(model, modifier):
+    return model[:-2] + modifier + model[-2:] + "\n"
 
 def row(arg, modifiers):
     result = "union {\n"
@@ -114,36 +118,43 @@ def wall(arg, modifiers):
 
 
 def tree(arg, modifiers):
-    random.seed(10)
     result = "union {\n"
-    result += "cylinder { " + "<0, -1, 0> <0, 1, 0> 0.3 }\n"
-    result += "sphere { " + "<0, 1, 0> 0.3 }\n"
+    xpos = random.uniform(-2, 2)
+    ypos = 2 * random.uniform(0.1, 2) 
+    zpos = random.uniform(-2, 2)
+    result += "cylinder { " + "<0, -1, 0> <{0}, {1}, {2}> 0.3 ".format(xpos, ypos, zpos) + "}\n"
+    result += "sphere { " + "<{0}, {1}, {2}> 0.3 ".format(xpos, ypos, zpos) + " }\n"
     length = 2.0
-    attenuation = 0.666
-    limbs = 0
     depth = 0
+    attenuation = 0.666
 
-    def make_branches(position, result, arg, depth):
+    def make_branches(position, result, arg, depth, roots=False):
         factor = attenuation ** depth
+        max_depth = 5
+        if roots:
+            max_depth = 2
         for branch in [0, 1]:
             xpos = position[0] + random.uniform(-factor * 2, factor * 2)
-            ypos = position[1] + length * random.uniform(0.1, factor * 2) 
+            if roots:
+                ypos = position[1] - length * random.uniform(0.1, factor * 2)
+            else:
+                ypos = position[1] + length * random.uniform(0.1, factor * 2)
             zpos = position[2] + random.uniform(-factor * 2, factor * 2)
             result += "cylinder { " + "<{0}, {1}, {2}> <{3}, {4}, {5}> {6} " .format(
                 position[0], position[1],  position[2], xpos, ypos, zpos, factor/4) + "}\n" 
             result += "sphere { " + "<{0}, {1}, {2}> {3} " .format(
                 xpos, ypos, zpos, factor/4) + "}\n" 
-            print("Tree. depth: {0}".format(depth))
-            if depth < 5:
-                result = make_branches([xpos, ypos, zpos], result, arg, depth + 1)
+            if depth < max_depth:
+                result = make_branches([xpos, ypos, zpos], result, arg, depth + 1, roots)
             else:
-                result += arg[:-2] + " translate <{0}, {1}, {2}> ".format(
-                    xpos, ypos, zpos) + arg[-2:]
+                if not roots:
+                    result += modify_object(arg,  " translate <{0}, {1}, {2}> ".format(xpos, ypos, zpos)) + "\n"
                 return result
 
         return result
 
-    result = make_branches([0, 1, 0], result, arg, 0)         
+    result = make_branches([xpos, ypos, zpos], result, arg, False)         
+    # result += make_branches([0, -1, 0], result, arg, True)         
 
     result += modifiers
     result += "}\n" 
@@ -195,16 +206,12 @@ def translate_adjective(functions, modifiers, record):
 
 
 def translate_noun(functions, modifiers, record):
-    text = ''
-    text += record['code']
-    text += " "
-    text += modifiers
-    text += " }\n"
+    text = modify_object(record['code'], modifiers)
     return functions, "", text
 
 
 def translate_function(functions, modifiers, record):
-    functions.append((record['code'], modifiers))
+    functions.insert(0, (record['code'], modifiers))
     return functions, "", ""
 
 
@@ -242,11 +249,11 @@ def text_to_pov(text):
             if not functions:
                 subject += text
             else:
-                temp_subject = text 
                 for function in functions:
-                    temp_subject += do_function(function, temp_subject)
+                    text = do_function(function, text)
                 functions = []
-                subject += temp_subject
+                subject += text
+                text = "" 
 
     if no_camera:
         subject += default_camera()

@@ -1,36 +1,36 @@
-N sphere sphere { <0, 0, 0> , 1  bounded_by { box { <-1.0, -1.0, -1.0>, <1.0, 1.0, 1.0> } }
-N ball sphere { <0, 0, 0> , 1   bounded_by { box { <-1.0, -1.0, -1.0>, <1.0, 1.0, 1.0> } } 
-N ellipsoid sphere { <0, 0, 0> , 1   bounded_by { box { <-1.0, -1.0, -1.0>, <1.0, 1.0, 1.0> } } 
-N box box { <-1.0, -1.0, -1.0>, <1.0, 1.0, 1.0>   bounded_by { box { <-1.0, -1.0, -1.0>, <1.0, 1.0, 1.0> } } 
-N cube box { <-1.0, -1.0, -1.0>, <1.0, 1.0, 1.0>   bounded_by { box { <-1.0, -1.0, -1.0>, <1.0, 1.0, 1.0> } } 
-N cone cone { <0.0, -1.0, 0.0>, 1.0, < 0.0, 1.0, 0.0>, 0.0   bounded_by { box { <-1.0, -1.0, -1.0>, <1.0, 1.0, 1.0> } } 
-N cylinder cylinder { <0.0, -1.0, 0.0>,  < 0.0, 1.0, 0.0>, 1.0     bounded_by { box { <-1.0, -1.0, -1.0>, <1.0, 1.0, 1.0> } } 
-N disk cylinder { <0.0, -1.0, 0.0>,  < 0.0, -0.90, 0.0>, 1.0     bounded_by { box { <-1.0, -1.0, -1.0>, <1.0, -0.9, 1.0> } } 
-N disc cylinder { <0.0, -1.0, 0.0>,  < 0.0, -0.90, 0.0>, 1.0   bounded_by { box { <-1.0, -1.0, -1.0>, <1.0, -0.9, 1.0> } } 
-N drum cylinder { <0.0, -1.0, 0.0>,  < 0.0, 1.0, 0.0>,  1.0   bounded_by { box { <-1.0, -1.0, -1.0>, <1.0, 1.0, 1.0> } } 
-N can cylinder { <0.0, -1.0, 0.0>,  < 0.0, 1.0, 0.0>, 1.0    bounded_by { box { <-1.0, -1.0, -1.0>, <1.0, 1.0, 1.0> } } 
-N torus torus { 0.7, 0.3 translate < 0, -0.7, 0 >   bounded_by { box { <-1.0, -1.0, -1.0>, <1.0, -0.4, 1.0> } } 
-N donut torus { 0.7, 0.3 translate < 0, -0.7, 0 >   bounded_by { box { <-1.0, -1.0, -1.0>, <1.0, -0.4, 1.0> } } 
-N bagel torus { 0.7, 0.3 translate < 0, -0.7, 0 >   bounded_by { box { <-1.0, -1.0, -1.0>, <1.0, -0.4, 1.0> } }
-N ring torus { 0.9, 0.1 translate < 0, -0.9, 0 >   bounded_by { box { <-1.0, -1.0, -1.0>, <1.0, -0.8 1.0> } }
-N blob blob { threshold 0.75 sphere { < (rand(rseed) - 0.5) * 2, (rand(rseed) - 0.5)*2, (rand(rseed) - 0.5)*2>, rand(rseed)*2, 1 } sphere { < (rand(rseed) - 0.5) * 2, (rand(rseed) - 0.5)*2, (rand(rseed) - 0.5)*2>, rand(rseed)*2, 1 } sphere { < (rand(rseed) - 0.5) * 2, (rand(rseed) - 0.5)*2, (rand(rseed) - 0.5)*2>, rand(rseed)*2, 1 } sphere { < (rand(rseed) - 0.5) * 2, (rand(rseed) - 0.5)*2, (rand(rseed) - 0.5)*2>, rand(rseed)*2, 1 } sphere { < (rand(rseed) - 0.5) * 2, (rand(rseed) - 0.5)*2, (rand(rseed) - 0.5)*2>, rand(rseed)*2, 1 } sphere { < (rand(rseed) - 0.5) * 2, (rand(rseed) - 0.5)*2, (rand(rseed) - 0.5)*2>, rand(rseed)*2, 1 }
-N fuzzball isosurface {function { f_sphere(x, y, z, 0.5) - f_noise3d(x * 5, y * 5, z * 5) * 0.5} threshold 0.01
-N cross union { box { < -0.5, 0.6, -0.2>, < 0.5, 0.8, 0.2> } box { < -0.1, -1.0, -0.2>, < 0.1, 1.0, 0.2> }
-N crucifix union { box { < -0.5, 0.6, -0.2>, < 0.5, 0.8, 0.2> } box { < -0.1, -1.0, -0.2>, < 0.1, 1.0, 0.2> }
-N bowl difference { difference {  sphere { <0, 0, 0>, 1 } sphere { < 0, 0.4, 0>, 1.2 } } box { <-2, -0.46, -2>, <2, 2, 2> }
-N cup difference { difference {  sphere { <0, 0, 0>, 1 } sphere { < 0, 0.2, 0>, 0.8516 } } box { <-2, 0.60, -2>, <2, 3, 2> }
-N cabinet  difference { box { <-1.0, -1.0, -1.0>, <1.0, 1.0, 1.0> } box { <-1.0, -1.0, -1.0>, <1.0, 1.0, 1.0> scale < 0.9, 0.9, 0.9> translate < 0, 0, -0.2> } 
-N case difference { box { <-1.0, -1.0, -1.0>, <1.0, 1.0, 1.0> } box { <-1.0, -1.0, -1.0>, <1.0, 1.0, 1.0> scale < 0.9, 0.9, 0.9> translate < 0, 0, -0.2> }
-N ground  plane { <0, 1, 0>, -0.999    
-N floor  plane { <0, 1, 0>, -0.999    
-N stratum  plane { <0, 1, 0>, 7    
-N sky sky_sphere {  pigment { gradient y color_map { [ 0.5  color CornflowerBlue ]  [ 1.0  color MidnightBlue ] }  scale 2  translate -1 }
-N fog fog { distance 25 color rgb<0.5, 0.5, 0.5>    
-N light union { sphere {< 0, 0, 0>, 1.5 pigment {color White filter 1} hollow interior { media { emission color rgb < 1, 1, 1> absorption color rgb < 0, 0, 0> density {spherical  color_map {  [0 color Black] [0.5 color White] [1 color White]    }  }  }}} sphere {< 0, 0, 0>, 0.5 pigment {color White filter 1} finish {specular 1} } light_source { < 0, 0, 0 > color White fade_distance 25 fade_power 2  area_light <5, 0, 0>, <0, 0, 5>, 5, 5 adaptive 1 jitter } translate < 0, 5, 10>
-N camera camera {  perspective location <0.0, 1.5, -12.0> direction <0, 0, 1> up y right x*1.77 look_at <0.0, 0.5, 0.00>
-N mountain height_field { function 100 100 { f_noise_generator(x*30, y*30, z*30, 3) } smooth scale < 100, 1, 100> translate < -50, -1.4, -50 >  
-N terrain height_field { function 100 100 { f_noise_generator(x*30, y*30, z*30, 3) } smooth scale < 100, 1, 100> translate < -50, -1.4, -50 >  
-N snow height_field { function 100 100 { f_noise_generator(x*30, y*30, z*30, 3) } smooth scale < 100, 1, 100> translate < -50, -1.4, -50 >  
+N sphere sphere { <0, 0, 0> , 1  bounded_by { box { <-1.0, -1.0, -1.0>, <1.0, 1.0, 1.0> } } }
+N ball sphere { <0, 0, 0> , 1   bounded_by { box { <-1.0, -1.0, -1.0>, <1.0, 1.0, 1.0> } } }
+N ellipsoid sphere { <0, 0, 0> , 1   bounded_by { box { <-1.0, -1.0, -1.0>, <1.0, 1.0, 1.0> } } }
+N box box { <-1.0, -1.0, -1.0>, <1.0, 1.0, 1.0>   bounded_by { box { <-1.0, -1.0, -1.0>, <1.0, 1.0, 1.0> } } }
+N cube box { <-1.0, -1.0, -1.0>, <1.0, 1.0, 1.0>   bounded_by { box { <-1.0, -1.0, -1.0>, <1.0, 1.0, 1.0> } } }
+N cone cone { <0.0, -1.0, 0.0>, 1.0, < 0.0, 1.0, 0.0>, 0.0   bounded_by { box { <-1.0, -1.0, -1.0>, <1.0, 1.0, 1.0> } } }
+N cylinder cylinder { <0.0, -1.0, 0.0>,  < 0.0, 1.0, 0.0>, 1.0     bounded_by { box { <-1.0, -1.0, -1.0>, <1.0, 1.0, 1.0> } } }
+N disk cylinder { <0.0, -1.0, 0.0>,  < 0.0, -0.90, 0.0>, 1.0     bounded_by { box { <-1.0, -1.0, -1.0>, <1.0, -0.9, 1.0> } } }
+N disc cylinder { <0.0, -1.0, 0.0>,  < 0.0, -0.90, 0.0>, 1.0   bounded_by { box { <-1.0, -1.0, -1.0>, <1.0, -0.9, 1.0> } } }
+N drum cylinder { <0.0, -1.0, 0.0>,  < 0.0, 1.0, 0.0>,  1.0   bounded_by { box { <-1.0, -1.0, -1.0>, <1.0, 1.0, 1.0> } } }
+N can cylinder { <0.0, -1.0, 0.0>,  < 0.0, 1.0, 0.0>, 1.0    bounded_by { box { <-1.0, -1.0, -1.0>, <1.0, 1.0, 1.0> } } }
+N torus torus { 0.7, 0.3 translate < 0, -0.7, 0 >   bounded_by { box { <-1.0, -1.0, -1.0>, <1.0, -0.4, 1.0> } } }
+N donut torus { 0.7, 0.3 translate < 0, -0.7, 0 >   bounded_by { box { <-1.0, -1.0, -1.0>, <1.0, -0.4, 1.0> } } }
+N bagel torus { 0.7, 0.3 translate < 0, -0.7, 0 >   bounded_by { box { <-1.0, -1.0, -1.0>, <1.0, -0.4, 1.0> } } }
+N ring torus { 0.9, 0.1 translate < 0, -0.9, 0 >   bounded_by { box { <-1.0, -1.0, -1.0>, <1.0, -0.8 1.0> } } }
+N blob blob { threshold 0.75 sphere { < (rand(rseed) - 0.5) * 2, (rand(rseed) - 0.5)*2, (rand(rseed) - 0.5)*2>, rand(rseed)*2, 1 } sphere { < (rand(rseed) - 0.5) * 2, (rand(rseed) - 0.5)*2, (rand(rseed) - 0.5)*2>, rand(rseed)*2, 1 } sphere { < (rand(rseed) - 0.5) * 2, (rand(rseed) - 0.5)*2, (rand(rseed) - 0.5)*2>, rand(rseed)*2, 1 } sphere { < (rand(rseed) - 0.5) * 2, (rand(rseed) - 0.5)*2, (rand(rseed) - 0.5)*2>, rand(rseed)*2, 1 } sphere { < (rand(rseed) - 0.5) * 2, (rand(rseed) - 0.5)*2, (rand(rseed) - 0.5)*2>, rand(rseed)*2, 1 } sphere { < (rand(rseed) - 0.5) * 2, (rand(rseed) - 0.5)*2, (rand(rseed) - 0.5)*2>, rand(rseed)*2, 1 } }
+N fuzzball isosurface {function { f_sphere(x, y, z, 0.5) - f_noise3d(x * 5, y * 5, z * 5) * 0.5} threshold 0.01 }
+N cross union { box { < -0.5, 0.6, -0.2>, < 0.5, 0.8, 0.2> } box { < -0.1, -1.0, -0.2>, < 0.1, 1.0, 0.2> } }
+N crucifix union { box { < -0.5, 0.6, -0.2>, < 0.5, 0.8, 0.2> } box { < -0.1, -1.0, -0.2>, < 0.1, 1.0, 0.2> } }
+N bowl difference { difference {  sphere { <0, 0, 0>, 1 } sphere { < 0, 0.4, 0>, 1.2 } } box { <-2, -0.46, -2>, <2, 2, 2> } }
+N cup difference { difference {  sphere { <0, 0, 0>, 1 } sphere { < 0, 0.2, 0>, 0.8516 } } box { <-2, 0.60, -2>, <2, 3, 2> } }
+N cabinet  difference { box { <-1.0, -1.0, -1.0>, <1.0, 1.0, 1.0> } box { <-1.0, -1.0, -1.0>, <1.0, 1.0, 1.0> scale < 0.9, 0.9, 0.9> translate < 0, 0, -0.2> } }
+N case difference { box { <-1.0, -1.0, -1.0>, <1.0, 1.0, 1.0> } box { <-1.0, -1.0, -1.0>, <1.0, 1.0, 1.0> scale < 0.9, 0.9, 0.9> translate < 0, 0, -0.2> } }
+N ground  plane { <0, 1, 0>, -0.999    }
+N floor  plane { <0, 1, 0>, -0.999    }
+N stratum  plane { <0, 1, 0>, 7    }
+N sky sky_sphere {  pigment { gradient y color_map { [ 0.5  color CornflowerBlue ]  [ 1.0  color MidnightBlue ] }  scale 2  translate -1 } }
+N fog fog { distance 25 color rgb<0.5, 0.5, 0.5>    }
+N light union { sphere {< 0, 0, 0>, 1.5 pigment {color White filter 1} hollow interior { media { emission color rgb < 1, 1, 1> absorption color rgb < 0, 0, 0> density {spherical  color_map {  [0 color Black] [0.5 color White] [1 color White]    }  }  }}} sphere {< 0, 0, 0>, 0.5 pigment {color White filter 1} finish {specular 1} } light_source { < 0, 0, 0 > color White fade_distance 25 fade_power 2  area_light <5, 0, 0>, <0, 0, 5>, 5, 5 adaptive 1 jitter } translate < 0, 5, 10> }
+N camera camera {  perspective location <0.0, 1.5, -12.0> direction <0, 0, 1> up y right x*1.77 look_at <0.0, 0.5, 0.00> }
+N mountain height_field { function 100 100 { f_noise_generator(x*30, y*30, z*30, 3) } smooth scale < 100, 1, 100> translate < -50, -1.4, -50 >  }
+N terrain height_field { function 100 100 { f_noise_generator(x*30, y*30, z*30, 3) } smooth scale < 100, 1, 100> translate < -50, -1.4, -50 >  }
+N snow height_field { function 100 100 { f_noise_generator(x*30, y*30, z*30, 3) } smooth scale < 100, 1, 100> translate < -50, -1.4, -50 >  }
 
 A near translate < 0, 0, -4>
 A close translate < 0, 0, -2>
@@ -40,7 +40,7 @@ A right translate < 3, 0, 0>
 A left translate < -3, 0, 0>
 A far translate < 0, 0, 6>
 A distant translate < 0, 0, 12>
-A large scale < 2, 2, 2> translate < 0, 1 , 0> 
+A large scale < 2, 2, 2> translate < 0, 1 , 0>
 A big scale < 2, 2, 2> translate < 0, 1 , 0>
 A huge scale < 4, 4, 4> translate < 0, 3 , 0>
 A gigantic scale < 8, 8, 8> translate < 0, 7 , 0>
@@ -49,11 +49,11 @@ A tiny scale < 0.25, 0.25, 0.25> translate < 0, -0.75  , 0>
 A miniscule scale < 0.125, 0.125, 0.125> translate < 0, -0.875  , 0>
 A long scale <2, 1, 1>
 A deep scale <1, 1, 4>
-A shallow scale <1, 1, 0.25> 
-A narrow scale <0.25, 1, 1> 
-A slender scale <0.25, 1, 0.25> 
-A thin scale <0.25, 1, 0.25> 
-A skinny scale <0.25, 1, 0.25> 
+A shallow scale <1, 1, 0.25>
+A narrow scale <0.25, 1, 1>
+A slender scale <0.25, 1, 0.25>
+A thin scale <0.25, 1, 0.25>
+A skinny scale <0.25, 1, 0.25>
 A tall scale <1, 2, 1> translate < 0, 1 , 0>
 A squat scale <1, 0.5, 1> translate < 0, -0.5  , 0>
 A flat scale <1, 0.25, 1>  translate < 0, -0.75  , 0>
@@ -70,26 +70,26 @@ A black pigment { color Black }
 A pink pigment { color Pink }
 A salmon pigment { color Salmon }
 A brown pigment { color Brown }
-A tan pigment { color Tan } 
-A navy pigment { color Navy } 
-A violet pigment { color Violet } 
-A purple pigment { color Violet } 
-A orange pigment { color Orange } 
-A maroon pigment { color Maroon } 
+A tan pigment { color Tan }
+A navy pigment { color Navy }
+A violet pigment { color Violet }
+A purple pigment { color Violet }
+A orange pigment { color Orange }
+A maroon pigment { color Maroon }
 A golden texture { Gold_Nugget  }
 A gold texture { Gold_Nugget  }
-A glass texture { NBglass } 
-A clear texture { Glass2 } 
+A glass texture { NBglass }
+A clear texture { Glass2 }
 A aluminum texture { Aluminum }
-A sienna pigment { color Sienna } 
-A thistle pigment { color Thistle } 
-A turquoise pigment { color Turquoise } 
-A khaki pigment { color Khaki } 
-A coral pigment { color Coral } 
-A aquamarine pigment { color Aquamarine } 
-A navy pigment { color Navy } 
-A orchid pigment { color Orchid } 
-A plum pigment { color Plum } 
+A sienna pigment { color Sienna }
+A thistle pigment { color Thistle }
+A turquoise pigment { color Turquoise }
+A khaki pigment { color Khaki }
+A coral pigment { color Coral }
+A aquamarine pigment { color Aquamarine }
+A navy pigment { color Navy }
+A orchid pigment { color Orchid }
+A plum pigment { color Plum }
 A wheat pigment { color Wheat }
 A brass texture { Tinny_Brass }
 A copper texture { New_Penny }
@@ -98,13 +98,14 @@ A silver texture { Soft_Silver }
 A metal texture { Brushed_Aluminum }
 A flesh pigment { color Flesh }
 A scarlet pigment { color Scarlet }
-A eggplant pigment { color Violet } 
+A eggplant pigment { color Violet }
 A wooden texture { Tan_Wood }
 A wood texture { Tan_Wood }
 A marble texture { Brown_Agate }
 A stone texture { Blood_Marble }
 A granite texture { Pink_Granite }
 A chrome texture { Polished_Chrome }
+A mirror texture { Polished_Chrome }
 A iron texture { Rusty_Iron }
 A rusty texture { Rusty_Iron }
 A turned rotate <0, 45, 0>
@@ -115,7 +116,7 @@ A reversed rotate <0, 180, 0>
 A backwards rotate <0, 180, 0>
 A twisted rotate <0, -22.5, 0>
 A cloudy pigment { Clouds }
-A sunny  pigment{gradient <0,1,0>  color_map{ [0.0 color White] [0.8 color rgb<0.1,0.25,0.75>] [1.0 color rgb<0.1,0.25,0.75>] }} 
+A sunny  pigment{gradient <0,1,0>  color_map{ [0.0 color White] [0.8 color rgb<0.1,0.25,0.75>] [1.0 color rgb<0.1,0.25,0.75>] }}
 A night pigment { Apocalypse } 
 A checkered pigment { checker Black White } 
 A crackled pigment { crackle form <0.31, 0.62, 0.53> color_map { [0.1  color Wheat] [0.9  color Bronze] } } 
