@@ -42,6 +42,11 @@
         <div>
             <label for="resolution">Resolution</label>
             <select name="resolution" value="{{ resolution }}">
+                <option value="640x360"
+                    {% if resolution == "640x360" %}
+                        selected
+                        {% endif %}>640x360</option>
+                
                 <option value="720x404"
                     {% if resolution == "720x404" %}
                         selected
