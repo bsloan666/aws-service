@@ -2,9 +2,11 @@
 """
     Standard Flask Application endpoints
 """
-import base64
+# import base64
+from datetime import datetime
 import os
 import re
+import shutil
 import uuid
 
 from .compose import generate_notes
@@ -44,25 +46,45 @@ def parse_scene():
     file_path = "static/images/logo.png"
     width, height = 720, 404
     resolution = "{0}x{1}".format(width, height)
-    image_string = ""
+    # image_string = ""
     if request.method == 'POST':
         render_string = request.form.get('prompt')
         resolution = request.form.get('resolution')
         width, height = [int(x)for x in re.split("x", resolution)]
         if 'submit' in request.form:
             prefix = file_prefix_from_render_string(render_string)
-            file_path = upaint.render(render_string, prefix, width, height)
+            source_file_path = upaint.render(render_string, prefix, width, height)
 
-    with open(file_path, "rb") as image_data:
-        image_string = base64.b64encode(image_data.read()).decode("utf-8")
+            file_path = os.path.join(app.config['IMAGE_FOLDER'], "{0}.png".format(prefix))
+            shutil.move(source_file_path, file_path)
 
-    if os.path.exists(file_path) and "render" in file_path:
-        os.remove(file_path)
+    # with open(file_path, "rb") as image_data:
+    #    image_string = base64.b64encode(image_data.read()).decode("utf-8")
+
+    files = os.listdir(os.path.dirname(file_path))
+    now = datetime.now()
+    removed = []
+    for basename in files:
+        del_path = os.path.join(os.path.dirname(file_path), basename)
+        modtime = int(os.path.getmtime(del_path))
+        hour_ago = int(now.timestamp()) - 3600
+        print("MODTIME:", modtime, "HOUR_AGO:", hour_ago)
+        if os.path.exists(del_path) and "render" in del_path and  modtime < hour_ago:
+            os.remove(del_path)
+            removed.append(del_path)
+
+    print("REMOVED:")
+    for path in removed:
+        print("   ", path)
+
+    if not removed:
+        print("Nothing to remove!")
 
     return render_template(
         'nsl_gui.html',
         prompt=render_string,
-        image_data=image_string,
+        # image_data=image_string,
+        render=file_path,
         width=width,
         resolution=resolution)
 
