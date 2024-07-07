@@ -56,7 +56,7 @@ def parse_scene():
     with open(file_path, "rb") as image_data:
         image_string = base64.b64encode(image_data.read()).decode("utf-8")
 
-    if os.path.exists(file_path):
+    if os.path.exists(file_path) and "render" in file_path:
         os.remove(file_path)
 
     return render_template(
