@@ -4,20 +4,17 @@
     <meta charset="UTF-8">
     <title>Render a Scene</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/my_style.css') }}">
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='images/favicon.ico') }}">
     <script>
-        $(document).ready(function() {
-
-        $('textarea').keypress(function(event) {
-
-            if (event.keyCode == 13) {
-                event.preventDefault();
-            }
-        });
-    });
+    function do_keypress(event){
+        if (event.keyCode == 13 &&  event.ctrlKey) {
+            document.getElementById("processSubmit").click();
+        }
+    }
     </script>
 </head>
 <body>
-    <form method="POST">
+    <form method="POST" id="page_form">
     <div>
         <table>
         <tr><td>
@@ -25,16 +22,17 @@
             <h1> Describe a Scene </h1>
                 <table>
                     <tr>
-                        <td><img src="{{ render }}" alt="render"></td> 
+                        <td><img src="data:image/png;base64,{{ image_data }}" alt="image_render"  id="imgslot"/></td> 
                     </tr>
                     <tr>
                         <td>
-                            <input type=text style="width: {{width}}px; height: 64px;" name="prompt" value="{{ prompt }}"/>   
+                            <textarea rows=10 style="width: {{width}}px; background-color: #222; color: #ddd;" 
+                                name="prompt" onkeydown="do_keypress(event)">{{ prompt }}</textarea>    
                         </td>
                     </tr>
                     <tr>
                         <td>
-                            <input type="submit" name="submit" value="Submit" style="width: 100%;"/>
+                            <input type="submit" id="processSubmit" name="submit" value="Submit" style="width: 100%;"/>
                         </td>
                     </tr>
                 </table>

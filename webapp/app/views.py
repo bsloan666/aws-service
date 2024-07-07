@@ -1,15 +1,13 @@
-# Author: bsloan 
+# Author: bsloan
 """
     Standard Flask Application endpoints
 """
+import base64
 import os
-import json
 import re
-import shutil
-import sys
 import uuid
 
-from .compose import generate_notes 
+from .compose import generate_notes
 from flask import Flask, Blueprint, render_template, request
 
 from . import upaint
@@ -22,7 +20,8 @@ RENDER_DIRECTORY = os.path.join('static', 'images')
 
 app = app = Flask(__name__)
 
-app.config['IMAGE_FOLDER'] = RENDER_DIRECTORY 
+app.config['IMAGE_FOLDER'] = RENDER_DIRECTORY
+
 
 def file_prefix_from_render_string(input_str):
     """
@@ -30,35 +29,40 @@ def file_prefix_from_render_string(input_str):
     """
     unfriendly = re.compile(r'[^a-zA-Z0-9]')
     outname = re.sub(unfriendly, '_', input_str)
-    
-    return "_".join(["render", outname[0:24], str(uuid.uuid4())[0:8]]) 
+
+    return "_".join(["render", outname[0:24], str(uuid.uuid4())[0:8]])
 
 
 @APP.route('/nsl', methods=['GET', 'POST'])
 def parse_scene():
     """
     The request will have a string and possibly some render parameters.
-    convert the string to a rendered scene 
+    convert the string to a rendered scene
     """
     render_string = ""
     prefix = "dummy"
     file_path = "static/images/logo.png"
-    width, height = 720, 404 
-    resolution = "{0}x{1}".format(width, height) 
+    width, height = 720, 404
+    resolution = "{0}x{1}".format(width, height)
+    image_string = ""
     if request.method == 'POST':
         render_string = request.form.get('prompt')
-        resolution = request.form.get('resolution') 
+        resolution = request.form.get('resolution')
         width, height = [int(x)for x in re.split("x", resolution)]
         if 'submit' in request.form:
             prefix = file_prefix_from_render_string(render_string)
-            image_path = upaint.render(render_string, prefix, width, height)
-            file_path = os.path.join(app.config['IMAGE_FOLDER'], "{0}.png".format(prefix))
-            shutil.move(image_path, file_path)
+            file_path = upaint.render(render_string, prefix, width, height)
+
+    with open(file_path, "rb") as image_data:
+        image_string = base64.b64encode(image_data.read()).decode("utf-8")
+
+    if os.path.exists(file_path):
+        os.remove(file_path)
 
     return render_template(
         'nsl_gui.html',
-        prompt=render_string, 
-        render=file_path,
+        prompt=render_string,
+        image_data=image_string,
         width=width,
         resolution=resolution)
 
@@ -67,7 +71,7 @@ def parse_scene():
 def add2():
     """
     The request will have Left Hand Side and Right Hand Side arguments.
-    Sum them and return 
+    Sum them and return
     """
 
     if request.method == 'POST':
@@ -77,24 +81,23 @@ def add2():
             rhs = float(request.form.get('rhs'))
             result = lhs + rhs
 
-            return render_template('add_gui.html', 
-                                   lhs=lhs, 
-                                   rhs=rhs, 
+            return render_template('add_gui.html',
+                                   lhs=lhs,
+                                   rhs=rhs,
                                    result=result)
 
     print("Entry Point!")
     return render_template('add_gui.html',
-                           lhs="", 
-                           rhs="", 
+                           lhs="",
+                           rhs="",
                            result="")
 
 
-        
 @APP.route('/thanks', methods=['GET', 'POST'])
 def thanks():
     """
     The request will have Left Hand Side and Right Hand Side arguments.
-    Sum them and return 
+    Sum them and return
     """
 
     if request.method == 'POST':
@@ -106,15 +109,14 @@ def thanks():
             address_line_2 = request.form.get('address_line_2')
             disclaimer_line_1 = request.form.get('disclaimer_line_1')
             disclaimer_line_2 = request.form.get('disclaimer_line_2')
-            content =  generate_notes(cfile,
-                           address_line_1=address_line_1,
-                           address_line_2=address_line_2,
-                           disclaimer_line_1=disclaimer_line_1,
-                           disclaimer_line_2=disclaimer_line_2) 
+            content = generate_notes(
+                cfile,
+                address_line_1=address_line_1,
+                address_line_2=address_line_2,
+                disclaimer_line_1=disclaimer_line_1,
+                disclaimer_line_2=disclaimer_line_2)
 
-            return render_template('blank.html',
-                           content=content) 
+            return render_template('blank.html', content=content)
 
     print("Entry Point!")
     return render_template('upload.html')
-                           

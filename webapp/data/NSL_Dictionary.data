@@ -17,6 +17,8 @@ N blob blob { threshold 0.75 sphere { < (rand(rseed) - 0.5) * 2, (rand(rseed) - 
 N fuzzball isosurface {function { f_sphere(x, y, z, 0.5) - f_noise3d(x * 5, y * 5, z * 5) * 0.5} threshold 0.01 }
 N cross union { box { < -0.5, 0.6, -0.2>, < 0.5, 0.8, 0.2> } box { < -0.1, -1.0, -0.2>, < 0.1, 1.0, 0.2> } }
 N crucifix union { box { < -0.5, 0.6, -0.2>, < 0.5, 0.8, 0.2> } box { < -0.1, -1.0, -0.2>, < 0.1, 1.0, 0.2> } }
+N arch difference  { box { <-2.0, -1.0, -1.0>, <2.0, 3.0, 1.0> } union { box { <-.75, -1.1, -1.1>, <0.75, 1.0, 1.1> } cylinder { <0.0, 1.0, -1.1>,  < 0.0, 1.0, 1.1>, 0.75 } } }
+N column difference  { cylinder { <0.0, -1.0, 0.0>,  < 0.0, 1.0, 0.0>, 1.0 } union { cylinder { <0.0, -1.1, 0.0>, < 0.0, 1.1, 0.0>, 0.1  translate <-1, 0, 0> rotate <0, 0, 0> } cylinder { <0.0, -1.1, 0.0>, < 0.0, 1.1, 0.0>, 0.1  translate <-1, 0, 0> rotate <0, 22.5, 0> } cylinder { <0.0, -1.1, 0.0>, < 0.0, 1.1, 0.0>, 0.1  translate <-1, 0, 0> rotate <0, 45, 0> } cylinder { <0.0, -1.1, 0.0>, < 0.0, 1.1, 0.0>, 0.1  translate <-1, 0, 0> rotate <0, 67.5, 0> } cylinder { <0.0, -1.1, 0.0>, < 0.0, 1.1, 0.0>, 0.1  translate <-1, 0, 0> rotate <0, 90, 0> } cylinder { <0.0, -1.1, 0.0>, < 0.0, 1.1, 0.0>, 0.1  translate <-1, 0, 0> rotate <0, 112.5, 0> } cylinder { <0.0, -1.1, 0.0>, < 0.0, 1.1, 0.0>, 0.1  translate <-1, 0, 0> rotate <0, 135, 0> } cylinder { <0.0, -1.1, 0.0>, < 0.0, 1.1, 0.0>, 0.1  translate <-1, 0, 0> rotate <0, 157.5, 0> } cylinder { <0.0, -1.1, 0.0>, < 0.0, 1.1, 0.0>, 0.1  translate <-1, 0, 0> rotate <0, 180, 0> } cylinder { <0.0, -1.1, 0.0>, < 0.0, 1.1, 0.0>, 0.1  translate <-1, 0, 0> rotate <0, 202.5, 0> } cylinder { <0.0, -1.1, 0.0>, < 0.0, 1.1, 0.0>, 0.1  translate <-1, 0, 0> rotate <0, 225, 0> } cylinder { <0.0, -1.1, 0.0>, < 0.0, 1.1, 0.0>, 0.1  translate <-1, 0, 0> rotate <0, 247.5, 0> } cylinder { <0.0, -1.1, 0.0>, < 0.0, 1.1, 0.0>, 0.1  translate <-1, 0, 0> rotate <0, 270, 0> } cylinder { <0.0, -1.1, 0.0>, < 0.0, 1.1, 0.0>, 0.1  translate <-1, 0, 0> rotate <0, 292.5, 0> } cylinder { <0.0, -1.1, 0.0>, < 0.0, 1.1, 0.0>, 0.1  translate <-1, 0, 0> rotate <0, 315, 0> } cylinder { <0.0, -1.1, 0.0>, < 0.0, 1.1, 0.0>, 0.1  translate <-1, 0, 0> rotate <0, 337.5, 0> } } }
 N bowl difference { difference {  sphere { <0, 0, 0>, 1 } sphere { < 0, 0.4, 0>, 1.2 } } box { <-2, -0.46, -2>, <2, 2, 2> } }
 N cup difference { difference {  sphere { <0, 0, 0>, 1 } sphere { < 0, 0.2, 0>, 0.8516 } } box { <-2, 0.60, -2>, <2, 3, 2> } }
 N cabinet  difference { box { <-1.0, -1.0, -1.0>, <1.0, 1.0, 1.0> } box { <-1.0, -1.0, -1.0>, <1.0, 1.0, 1.0> scale < 0.9, 0.9, 0.9> translate < 0, 0, -0.2> } }
@@ -111,12 +113,13 @@ A rusty texture { Rusty_Iron }
 A turned rotate <0, 45, 0>
 A flipped rotate <180, 0 , 0>
 A tipped rotate <90, 0 , 0>
+A sideways rotate <0, 90 , 0>
 A upside-down rotate <180, 0 , 0>
 A reversed rotate <0, 180, 0>
 A backwards rotate <0, 180, 0>
 A twisted rotate <0, -22.5, 0>
 A cloudy pigment { Clouds }
-A sunny  pigment{gradient <0,1,0>  color_map{ [0.0 color White] [0.8 color rgb<0.1,0.25,0.75>] [1.0 color rgb<0.1,0.25,0.75>] }}
+A sunny pigment { gradient <0,1,0>  color_map { [0.0 color White] [0.8 color rgb<0.1,0.25,0.75>] [1.0 color rgb<0.1,0.25,0.75>] } }
 A night pigment { Apocalypse } 
 A checkered pigment { checker Black White } 
 A crackled pigment { crackle form <0.31, 0.62, 0.53> color_map { [0.1  color Wheat] [0.9  color Bronze] } } 
@@ -129,3 +132,6 @@ F row row
 F wall wall
 F pile pile
 F tree tree
+F pair pair
+F line line
+F ring ring
