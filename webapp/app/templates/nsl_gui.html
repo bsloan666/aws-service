@@ -11,6 +11,13 @@
             render();
         }
     }
+    function resolution_changed(){
+        var text_elem = document.getElementById("prompt");
+        var resolution = document.getElementById("resolution").value;
+        var width = resolution.split("x")[0];
+        text_elem.style.width = width + "px";
+    }
+        
     function render(){
         var text_string = document.getElementById("prompt").value;
         var resolution = document.getElementById("resolution").value;
@@ -59,7 +66,7 @@
         <td>
         <div>
             <label for="resolution">Resolution</label>
-            <select name="resolution" id="resolution" value="{{ resolution }}">
+            <select name="resolution" id="resolution" value="{{ resolution }}" onchange="resolution_changed()">
                 <option value="640x360"
                     {% if resolution == "640x360" %}
                         selected
