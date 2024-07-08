@@ -7,14 +7,32 @@
     <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='images/favicon.ico') }}">
     <script>
     function do_keypress(event){
-        if (event.keyCode == 13 &&  event.ctrlKey) {
-            document.getElementById("processSubmit").click();
+        if (event.keyCode == 13 && event.ctrlKey) {
+            render();
         }
+    }
+    function render(){
+        var text_string = document.getElementById("prompt").value;
+        var resolution = document.getElementById("resolution").value;
+            var xhttp = new XMLHttpRequest();
+            var url = "{{ url_for('app.render') }}";
+            var data = new FormData();
+            xhttp.onreadystatechange = function () {
+                if (this.readyState === 4 && this.status === 200) {
+                    image_dict = JSON.parse(this.responseText);
+                    var elem = document.getElementById("image_tag");
+                    elem.src = 'data:image/png;base64,' + image_dict['image_data'];
+                   
+                }
+            };
+            xhttp.open("POST", url, true);
+            data.append('prompt', text_string);
+            data.append('resolution', resolution);
+            xhttp.send(data);
     }
     </script>
 </head>
 <body>
-    <form method="POST" id="page_form">
     <div>
         <table>
         <tr><td>
@@ -22,18 +40,17 @@
             <h1> Describe a Scene </h1>
                     <table>
                         <tr>
-                        <!--<td><img src="data:image/png;base64,{{ image_data }}" alt="image_render"  id="imgslot"/></td>--> 
-                        <td><img src="{{ render }}" alt="image_render"  id="imgslot"/></td> 
+                        <td><img src="data:image/png;base64,{{ image_data }}" alt="image_render"  id="image_tag"/></td> 
                     </tr>
                     <tr>
                         <td>
                             <textarea rows=10 style="width: {{width}}px; background-color: #222; color: #ddd;" 
-                                name="prompt" onkeydown="do_keypress(event)">{{ prompt }}</textarea>    
+                                name="prompt" id="prompt" onkeydown="do_keypress(event)">{{ prompt }}</textarea>    
                         </td>
                     </tr>
                     <tr>
                         <td>
-                            <input type="submit" id="processSubmit" name="submit" value="Submit" style="width: 100%;"/>
+                            <button id="processSubmit" name="render" style="width: 100%;" onclick="render()">Render (Ctrl+Enter)</button>
                         </td>
                     </tr>
                 </table>
@@ -42,7 +59,7 @@
         <td>
         <div>
             <label for="resolution">Resolution</label>
-            <select name="resolution" value="{{ resolution }}">
+            <select name="resolution" id="resolution" value="{{ resolution }}">
                 <option value="640x360"
                     {% if resolution == "640x360" %}
                         selected
@@ -67,7 +84,5 @@
         </td></tr>
         </table>
     </div>
-
-    </form>
 </body>
 </html>
