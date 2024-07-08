@@ -35,6 +35,7 @@
             xhttp.open("POST", url, true);
             data.append('prompt', text_string);
             data.append('resolution', resolution);
+            xhttp.timeout = 360000;
             xhttp.send(data);
     }
     </script>
