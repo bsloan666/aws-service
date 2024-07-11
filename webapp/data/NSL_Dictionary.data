@@ -28,9 +28,11 @@ N floor  plane { <0, 1, 0>, -0.999    }
 N stratum  plane { <0, 1, 0>, 7    }
 N sky sky_sphere {  pigment { gradient y color_map { [ 0.5  color CornflowerBlue ]  [ 1.0  color MidnightBlue ] }  scale 2  translate -1 } }
 N fog fog { distance 25 color rgb<0.5, 0.5, 0.5>    }
+N mist fog { distance 100 color rgb<0.5, 0.5, 0.5>    }
 N light union { sphere {< 0, 0, 0>, 1.5 pigment {color White filter 1} hollow interior { media { emission color White absorption color rgb < 0, 0, 0> density {spherical  color_map {  [0 color Black] [0.5 color White] [1 color White]    }  }  }}} sphere {< 0, 0, 0>, 0.5 pigment {color White filter 1} finish {specular 1} } light_source { < 0, 0, 0 > color White fade_distance 25 fade_power 2  area_light <5, 0, 0>, <0, 0, 5>, 5, 5 adaptive 1 jitter } translate < 0, 5, 10> }
 N camera camera {  perspective location <0.0, 1.5, -12.0> direction <0, 0, 1> up y right x*1.77 look_at <0.0, 0.5, 0.00> }
-N mountain height_field { function 100 100 { f_noise_generator(x*30, y*30, z*30, 3) } smooth scale < 100, 1, 100> translate < -50, -1.4, -50 >  }
+N mountain height_field { function 100 100 { f_noise_generator(x*4, y*4, 0, 3) }  smooth water_level -1 scale < 400, 75, 200> rotate x*-27 translate < -225, -50.4, 85 > }
+N hill height_field { function 100 100 { f_noise_generator(x*3, y*3, z*3, 3) }  smooth scale < 400, 25, 200> rotate x*-14 translate < -175, -22.4, 50 > }
 N terrain height_field { function 100 100 { f_noise_generator(x*30, y*30, z*30, 3) } smooth scale < 100, 1, 100> translate < -50, -1.4, -50 >  }
 N snow height_field { function 100 100 { f_noise_generator(x*30, y*30, z*30, 3) } smooth scale < 100, 1, 100> translate < -50, -1.4, -50 >  }
 
@@ -125,6 +127,10 @@ A checkered pigment { checker Black White }
 A crackled pigment { crackle form <0.31, 0.62, 0.53> color_map { [0.1  color Wheat] [0.9  color Bronze] } } 
 A turning rotate <0, clock*180, 0>
 A zooming translate < 0, 0 ,clock*2.1>
+A furrowed texture { pigment { wood turbulence 0.05 color_map { [0 color rgb<0.3, 0.3, 0.15> ] [1 color rgb<0.5, 0.5, 0.25> ] } rotate <0, 45, 0> } finish { ambient 0.25 phong 0.3 phong_size 15 } }
+A mottled texture { pigment { bozo turbulence 0.05 color_map { [0 color rgb<0.4, 0.3, 0.1> ] [1 color rgb<0.6, 0.5, 0.15> ] } } finish { ambient 0.25 diffuse 0.8 } }
+A leafy texture { pigment { bozo turbulence 0.05 color_map { [0 color rgb<0.1, 0.3, 0.1> ] [1 color rgb<0.3, 0.6, 0.05> ] } scale <0.2, 0.2, 0.2> } finish { ambient 0.25 diffuse 0.8 } }
+
 
 F array flat_array
 F stack stack

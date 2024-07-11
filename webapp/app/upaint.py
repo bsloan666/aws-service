@@ -12,6 +12,9 @@ def default_camera():
         up y
         right x*1.77
         look_at <0.0, 0.5, 0.00>
+        aperture 0.3
+        blur_samples 25
+        focal_point <0.0, 0.5, 0.00>
     }
     """
 
@@ -37,6 +40,7 @@ def header():
     #include "colors.inc"
     #include "textures.inc"
     #include "shapes.inc"
+    #include "functions.inc"
 
     #declare rseed = seed(123);
 
