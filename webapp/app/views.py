@@ -61,8 +61,7 @@ def render():
 @APP.route('/nsl', methods=['GET', 'POST'])
 def index():
     """
-    The request will have a string and possibly some render parameters.
-    convert the string to a rendered scene
+    The request will return the "splash screen" logo page.
     """
     file_path = "static/images/logo.png"
     width, height = 720, 404
@@ -79,6 +78,30 @@ def index():
         image_data=image_string,
         width=width,
         resolution=resolution)
+
+
+@APP.route('/wgnsl', methods=['GET', 'POST'])
+def wg_index():
+    """
+    The request will have a string and possibly some render parameters.
+    convert the string to a rendered scene
+    """
+    file_path = "static/images/logo.png"
+    width, height = 720, 404
+    resolution = "{0}x{1}".format(width, height)
+    image_string = ""
+    render_string = ""
+
+    with open(file_path, "rb") as image_data:
+        image_string = base64.b64encode(image_data.read()).decode("utf-8")
+
+    return render_template(
+        'webgpu_gui.html',
+        prompt=render_string,
+        image_data=image_string,
+        width=width,
+        resolution=resolution)
+
 
 
 @APP.route('/add2', methods=['GET', 'POST'])
